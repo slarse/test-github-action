@@ -1,13 +1,14 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Sorald Buildbreaker'
+description: 'Run Sorald and break the build if there are any repairable violations'
 inputs:
-  who-to-greet:
-    description: 'Who to greet'
+  source:
+    description: 'Path to the root source code directory to analyze'
     required: true
-    default: 'World'
-outputs:
-  time:
-    description: 'The time we greeted you'
+    default: '.'
+  sorald-jar-url:
+    description: 'URL to a Sorald JAR-file'
+    required: true
+    default: 'https://oss.sonatype.org/content/repositories/snapshots/se/kth/castor/sorald/0.1.0-SNAPSHOT/sorald-0.1.0-20210413.095022-2-jar-with-dependencies.jar'
 runs:
   using: 'node12'
   main: 'dist/index.js'

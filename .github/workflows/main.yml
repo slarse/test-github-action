@@ -1,16 +1,19 @@
 on: [push]
 
 jobs:
-  hello_world_job:
+  buildbreaker:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Run Sorald Buildbreaker
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Hello world action step
-        uses: ./
-        id: hello
         with:
-          who-to-greet: 'Simon'
+          repository: 'SpoonLabs/sorald'
+          ref: '5e64028'
+      - name: Run Sorald Buildbreaker
+        uses: ./
+        id: sorald-buildbreaker
+        with:
+          source: 'src/main/java'
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"

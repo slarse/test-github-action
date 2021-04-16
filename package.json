@@ -19,6 +19,9 @@
   "homepage": "https://github.com/slarse/test-github-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.7",
-    "@actions/github": "^4.0.0"
+    "@actions/github": "^4.0.0",
+    "await-spawn": "^4.0.1",
+    "bl": "^5.0.0",
+    "got": "^11.8.2"
   }
 }
