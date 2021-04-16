@@ -9,7 +9,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: 'SpoonLabs/sorald'
-          ref: '5e64028'
+          ref: '5e64028cd82336b34a68c60d314ce1c57b4bf276'
       - name: Run Sorald Buildbreaker
         uses: ./
         id: sorald-buildbreaker
