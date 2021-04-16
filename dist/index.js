@@ -18553,7 +18553,7 @@ async function runSorald(source, soraldJarUrl, ) {
   console.log(`Mining rule violations at ${source}`);
   const keyToSpecs = await sorald.mine(jarDstPath, source, "stats.json");
 
-  if (keyToSpecs) {
+  if (keyToSpecs.size > 0) {
     console.log('Found rule violations');
 
     console.log('Attempting repairs');
