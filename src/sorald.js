@@ -65,7 +65,7 @@ async function restore(source) {
       'git',
       [
         'restore',
-        source,
+        '.',
       ],
       {cwd: source},
     )
