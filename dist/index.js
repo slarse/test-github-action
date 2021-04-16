@@ -18266,8 +18266,7 @@ async function mine(soraldJar, source, statsFile) {
       ]
     );
   } catch (e) {
-    console.log(e.stderr.toString());
-    throw e;
+    throw new Error(e.stderr.toString());
   }
 
   const miningData = JSON.parse(await fs.promises.readFile(statsFile))
@@ -18298,8 +18297,7 @@ async function repair(soraldJar, source, statsFile, violationSpecs) {
       ]
     );
   } catch (e) {
-    console.log(e.stderr.toString());
-    throw e;
+    throw new Error(e.stderr.toString());
   }
 
   const repairData = JSON.parse(await fs.promises.readFile(statsFile));
@@ -18317,8 +18315,7 @@ async function restore(source) {
       {cwd: source},
     )
   } catch (e) {
-    console.log(e.stderr.toString());
-    throw e;
+    throw new Error(e.stderr.toString());
   }
 }
 
@@ -18552,35 +18549,36 @@ async function runSorald(source, soraldJarUrl, ) {
 
   console.log(`Downloading Sorald jar to ${jarDstPath}`);
   await download(soraldJarUrl, jarDstPath);
+
   console.log(`Mining rule violations at ${source}`);
-  keyToSpecs = await sorald.mine(jarDstPath, source, "stats.json");
+  const keyToSpecs = await sorald.mine(jarDstPath, source, "stats.json");
 
-  console.log('Found rule violations');
+  if (keyToSpecs) {
+    console.log('Found rule violations');
 
-  console.log('Attempting repairs');
-  const performedRepairs = Array.from(keyToSpecs.entries()).flatMap(async function(subArray) {
-    const [ruleKey, violationSpecs] = subArray;
-    console.log(`Repairing violations of rule ${ruleKey}: ${violationSpecs}`);
-    const statsFile = `${ruleKey}.json`;
-    const repairs = await sorald.repair(jarDstPath, source, statsFile, violationSpecs);
-    sorald.restore(source);
-    return repairs;
-  });
-
-  return (await Promise.all(performedRepairs)).flatMap(e => e);
+    console.log('Attempting repairs');
+    const performedRepairs = Array.from(keyToSpecs.entries()).flatMap(async function(subArray) {
+      const [ruleKey, violationSpecs] = subArray;
+      console.log(`Repairing violations of rule ${ruleKey}: ${violationSpecs}`);
+      const statsFile = `${ruleKey}.json`;
+      const repairs = await sorald.repair(jarDstPath, source, statsFile, violationSpecs);
+      sorald.restore(source);
+      return repairs;
+    });
+    return (await Promise.all(performedRepairs)).flatMap(e => e);
+  } else {
+    console.log('No violations found');
+    return [];
+  }
 }
 
-try {
-  const source = core.getInput('source');
-  const soraldJarUrl = core.getInput('sorald-jar-url')
-  runSorald(source, soraldJarUrl).then(repairedViolations => {
-    if (repairedViolations.length > 0) {
-      core.setFailed(`Found repairable violations ${repairedViolations.join(' ')}`)
-    }
-  });
-} catch (error) {
-  core.setFailed(error.message);
-}
+const source = core.getInput('source');
+const soraldJarUrl = core.getInput('sorald-jar-url')
+runSorald(source, soraldJarUrl).then(repairedViolations => {
+  if (repairedViolations.length > 0) {
+    core.setFailed(`Found repairable violations ${repairedViolations.join(' ')}`)
+  }
+}).catch(e => core.setFailed(e.message));
 
 })();
 

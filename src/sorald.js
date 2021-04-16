@@ -19,8 +19,7 @@ async function mine(soraldJar, source, statsFile) {
       ]
     );
   } catch (e) {
-    console.log(e.stderr.toString());
-    throw e;
+    throw new Error(e.stderr.toString());
   }
 
   const miningData = JSON.parse(await fs.promises.readFile(statsFile))
@@ -51,8 +50,7 @@ async function repair(soraldJar, source, statsFile, violationSpecs) {
       ]
     );
   } catch (e) {
-    console.log(e.stderr.toString());
-    throw e;
+    throw new Error(e.stderr.toString());
   }
 
   const repairData = JSON.parse(await fs.promises.readFile(statsFile));
@@ -70,8 +68,7 @@ async function restore(source) {
       {cwd: source},
     )
   } catch (e) {
-    console.log(e.stderr.toString());
-    throw e;
+    throw new Error(e.stderr.toString());
   }
 }
 
