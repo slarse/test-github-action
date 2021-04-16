@@ -18575,9 +18575,7 @@ try {
   const soraldJarUrl = core.getInput('sorald-jar-url')
   runSorald(source, soraldJarUrl).then(repairedViolations => {
     if (repairedViolations.length > 0) {
-      const msg = `Found repairable violations ${repairedViolations.join(' ')}`
-      console.log(msg)
-      core.setFailed(msg)
+      core.setFailed(`Found repairable violations ${repairedViolations.join(' ')}`)
     }
   });
 } catch (error) {
