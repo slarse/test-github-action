@@ -5,8 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Run Sorald Buildbreaker
     steps:
-      - name: Checkout Action
-        uses: actions/checkout@v2
       - name: Checkout Sorald
         uses: actions/checkout@v2
         with:
@@ -14,7 +12,6 @@ jobs:
           ref: '5e64028cd82336b34a68c60d314ce1c57b4bf276'
           path: 'sorald'
       - name: Run Sorald Buildbreaker
-        uses: ./
-        id: sorald-buildbreaker
+        uses: slarse/test-github-action@e1f136ca4486dbf3f9afc15ca608e78ff2d3dc50
         with:
-          source: 'sorald/src/main/java'
+          source: 'src/main/java'
